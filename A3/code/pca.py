@@ -15,7 +15,6 @@ import warnings
 
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
-from sklearn.datasets import load_iris
 from sklearn.decomposition import PCA
 from sklearn.manifold import MDS, Isomap
 from sklearn.model_selection import StratifiedKFold, cross_val_score
@@ -49,10 +48,13 @@ def part1_by_hand():
 
 # ---------- Iris ----------
 def load_data():
-    """The Iris data (150 x 4, in cm) as shipped with scikit-learn: the UCI file with two known errors (samples 35, 38) corrected."""
-    iris = load_iris()
+    """The Iris data (150 x 4, in cm) from the UCI file iris.data (archive.ics.uci.edu/dataset/53/iris), used as is."""
+    classes = ["setosa", "versicolor", "virginica"]
+    rows = [line.strip().split(",") for line in open(os.path.join(HERE, "iris.data")) if line.strip()]
+    X = np.array([[float(v) for v in r[:4]] for r in rows])
+    y = np.array([classes.index(r[4].replace("Iris-", "")) for r in rows])
     names = ["sepal length", "sepal width", "petal length", "petal width"]
-    return iris.data, iris.target, names, list(iris.target_names)
+    return X, y, names, classes
 
 
 # ---------- Part 3: PCA ----------

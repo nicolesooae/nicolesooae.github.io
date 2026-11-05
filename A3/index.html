@@ -224,9 +224,9 @@
                     <section id="data">
                         <h3>The data</h3>
                         <p>Iris has 150 flowers, 50 from each of three species (setosa, versicolor, virginica), with four
-                            features measured in cm: sepal length, sepal width, petal length and petal width. I load it
-                            with <code>sklearn.datasets.load_iris</code>, the scikit-learn copy of the UCI Iris file, which
-                            corrects two known errors in the UCI file (samples 35 and 38). Because every feature has the same unit (cm), PCA is done on the
+                            features measured in cm: sepal length, sepal width, petal length and petal width. I load the
+                            UCI file (<code>iris.data</code> from archive.ics.uci.edu/dataset/53/iris) exactly as
+                            distributed. Because every feature has the same unit (cm), PCA is done on the
                             centred but <b>unscaled</b> data, so a feature's variance counts in proportion to its
                             physical spread.</p>
                     </section>
@@ -256,7 +256,7 @@
                                 <thead><tr><th>Features kept</th><th>5-NN accuracy</th><th>Features kept</th><th>5-NN accuracy</th></tr></thead>
                                 <tbody>
                                     <tr><td>sepal length</td><td class="num">69.3</td><td>sepal length + sepal width</td><td class="num">76.7</td></tr>
-                                    <tr><td>sepal width</td><td class="num">52.7</td><td>sepal length + petal length</td><td class="num">94.0</td></tr>
+                                    <tr><td>sepal width</td><td class="num">52.0</td><td>sepal length + petal length</td><td class="num">94.0</td></tr>
                                     <tr><td>petal length</td><td class="num">92.7</td><td>sepal length + petal width</td><td class="num">96.0</td></tr>
                                     <tr><td><b>petal width</b></td><td class="num"><b>96.0</b></td><td>sepal width + petal length</td><td class="num">94.7</td></tr>
                                     <tr><td>all four</td><td class="num">95.3</td><td>sepal width + petal width</td><td class="num">94.7</td></tr>
@@ -272,7 +272,7 @@
                                 long and 1.0 cm wide, so a single threshold isolates setosa with no errors. Versicolor and
                                 virginica follow in that order but overlap (petal length 3.0–5.1 vs 4.5–6.9 cm). Sepal
                                 length and especially sepal width overlap heavily across all three species (sepal width
-                                alone classifies only 53% correctly, barely above the 33% of guessing).</p>
+                                alone classifies only 52% correctly, barely above the 33% of guessing).</p>
                             <p>The best pair is <b>petal length vs petal width</b> (Figure 3, bottom right): three
                                 compact groups along a diagonal, setosa far from the others and versicolor/virginica
                                 touching at only a few flowers near petal length 5 cm, petal width 1.6–1.8 cm. Any pair that
@@ -293,17 +293,17 @@
                     <section id="q3">
                         <h3>Part 3: PCA</h3>
                         <p><code>sklearn.decomposition.PCA</code> centres the data on the mean
-                            $\boldsymbol\mu = (5.843,\ 3.057,\ 3.758,\ 1.199)$ cm and returns the unit eigenvectors of the
+                            $\boldsymbol\mu = (5.843,\ 3.054,\ 3.759,\ 1.199)$ cm and returns the unit eigenvectors of the
                             covariance matrix, sorted by eigenvalue. The PCA axes, as unit vectors in the order
                             (sepal length, sepal width, petal length, petal width), are:</p>
                         <div class="table-wrap">
                             <table>
                                 <thead><tr><th>Axis</th><th>sepal length</th><th>sepal width</th><th>petal length</th><th>petal width</th><th>Variance (cm²)</th><th>% of total</th></tr></thead>
                                 <tbody>
-                                    <tr><td><b>PC1</b></td><td class="num">0.3614</td><td class="num">−0.0845</td><td class="num"><b>0.8567</b></td><td class="num">0.3583</td><td class="num">4.2282</td><td class="num">92.46</td></tr>
-                                    <tr><td><b>PC2</b></td><td class="num"><b>0.6566</b></td><td class="num"><b>0.7302</b></td><td class="num">−0.1734</td><td class="num">−0.0755</td><td class="num">0.2427</td><td class="num">5.31</td></tr>
-                                    <tr><td><b>PC3</b></td><td class="num">−0.5820</td><td class="num">0.5979</td><td class="num">0.0762</td><td class="num">0.5458</td><td class="num">0.0782</td><td class="num">1.71</td></tr>
-                                    <tr><td>PC4</td><td class="num">−0.3155</td><td class="num">0.3197</td><td class="num">0.4798</td><td class="num">−0.7537</td><td class="num">0.0238</td><td class="num">0.52</td></tr>
+                                    <tr><td><b>PC1</b></td><td class="num">0.3616</td><td class="num">−0.0823</td><td class="num"><b>0.8566</b></td><td class="num">0.3588</td><td class="num">4.2248</td><td class="num">92.46</td></tr>
+                                    <tr><td><b>PC2</b></td><td class="num"><b>0.6565</b></td><td class="num"><b>0.7297</b></td><td class="num">−0.1758</td><td class="num">−0.0747</td><td class="num">0.2422</td><td class="num">5.30</td></tr>
+                                    <tr><td><b>PC3</b></td><td class="num">−0.5810</td><td class="num">0.5964</td><td class="num">0.0725</td><td class="num">0.5491</td><td class="num">0.0785</td><td class="num">1.72</td></tr>
+                                    <tr><td>PC4</td><td class="num">0.3173</td><td class="num">−0.3241</td><td class="num">−0.4797</td><td class="num">0.7511</td><td class="num">0.0237</td><td class="num">0.52</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -365,16 +365,16 @@
                             ("PCA revisited – by SVD"), where the $\lambda_i$ on that slide are the <b>singular values</b>
                             $\sigma_i$ of $X_c$, not the covariance eigenvalues (the eigenvalues are $\sigma_i^2/N$). Squaring
                             the covariance eigenvalues instead would give a wrong 99.63% for one PC and 99.96% for two.</p>
-                        <p>For Iris $\|X_c\|_F^2 = 681.37$ (total variance $681.37/149 = 4.573$ cm²) and the squared
-                            singular values are $630.01,\ 36.16,\ 11.65,\ 3.55$:</p>
+                        <p>For Iris $\|X_c\|_F^2 = 680.82$ (total variance $680.82/149 = 4.569$ cm²) and the squared
+                            singular values are $629.50,\ 36.09,\ 11.70,\ 3.53$:</p>
                         <div class="table-wrap">
                             <table>
                                 <thead><tr><th>PCs kept $k$</th><th>$\|X_cW_k\|_F^2$</th><th>Residual $\|X_c - X_cW_kW_k^\top\|_F^2$</th><th>Variance explained</th></tr></thead>
                                 <tbody>
-                                    <tr><td>1</td><td class="num">630.01</td><td class="num">51.36</td><td class="num">92.46%</td></tr>
-                                    <tr><td><b>2</b></td><td class="num"><b>666.17</b></td><td class="num"><b>15.20</b></td><td class="num"><b>97.77%</b></td></tr>
-                                    <tr><td>3</td><td class="num">677.82</td><td class="num">3.55</td><td class="num">99.48%</td></tr>
-                                    <tr><td>4</td><td class="num">681.37</td><td class="num">0</td><td class="num">100%</td></tr>
+                                    <tr><td>1</td><td class="num">629.50</td><td class="num">51.32</td><td class="num">92.46%</td></tr>
+                                    <tr><td><b>2</b></td><td class="num"><b>665.60</b></td><td class="num"><b>15.23</b></td><td class="num"><b>97.76%</b></td></tr>
+                                    <tr><td>3</td><td class="num">677.30</td><td class="num">3.53</td><td class="num">99.48%</td></tr>
+                                    <tr><td>4</td><td class="num">680.82</td><td class="num">0</td><td class="num">100%</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -385,14 +385,14 @@
                         <div class="callout">
                             <div class="callout-title">Answers</div>
                             <p><b>1.</b> The two-dimensional representation from Part 3 explains
-                                $666.17 / 681.37 = \mathbf{97.77\%}$ of the variance (92.46% from PC1 plus 5.31% from
+                                $665.60 / 680.82 = \mathbf{97.76\%}$ of the variance (92.46% from PC1 plus 5.30% from
                                 PC2). Halving the storage from four numbers per flower to two loses only 2.2% of the
-                                variance; the RMS reconstruction error is $\sqrt{15.20/150} = 0.32$ cm per flower.</p>
+                                variance; the RMS reconstruction error is $\sqrt{15.23/150} = 0.32$ cm per flower.</p>
                             <p><b>2.</b> <b>One PC</b> is enough to explain 50% of the variance: PC1 alone already explains
                                 92.46%, far above the 50% threshold (zero PCs explain 0%).</p>
                             <p>This depends on not rescaling the features. If each feature is first standardized to
-                                unit variance, the shares become 72.96%, 22.85%, 3.67% and 0.52%, so two PCs explain
-                                95.81% and one PC (72.96%) is still enough for 50%. The answers are the same, but PC1 is
+                                unit variance, the shares become 72.77%, 23.03%, 3.68% and 0.52%, so two PCs explain
+                                95.80% and one PC (72.77%) is still enough for 50%. The answers are the same, but PC1 is
                                 less dominant because the small-variance sepal width is given equal weight.</p>
                         </div>
                     </section>
@@ -462,10 +462,10 @@
                                 <thead><tr><th rowspan="2">$d$</th><th colspan="2">PCA residual variance</th><th colspan="2">ISOMAP residual variance</th><th colspan="2">5-NN accuracy (%)</th></tr>
                                     <tr><th>vs Euclidean</th><th>vs geodesic</th><th>vs Euclidean</th><th>vs geodesic</th><th>PCA</th><th>ISOMAP</th></tr></thead>
                                 <tbody>
-                                    <tr><td>1</td><td class="num">0.0152</td><td class="num">0.0476</td><td class="num">0.0351</td><td class="num">0.0293</td><td class="num">91.3</td><td class="num">88.0</td></tr>
-                                    <tr><td><b>2</b></td><td class="num"><b>0.0032</b></td><td class="num">0.0425</td><td class="num">0.0459</td><td class="num"><b>0.0161</b></td><td class="num"><b>96.0</b></td><td class="num">94.7</td></tr>
-                                    <tr><td>3</td><td class="num">0.0004</td><td class="num">0.0419</td><td class="num">0.0531</td><td class="num">0.0113</td><td class="num">96.0</td><td class="num">96.7</td></tr>
-                                    <tr><td>4</td><td class="num">0.0000</td><td class="num">0.0417</td><td class="num">0.0433</td><td class="num">0.0041</td><td class="num">95.3</td><td class="num">96.7</td></tr>
+                                    <tr><td>1</td><td class="num">0.0152</td><td class="num">0.0475</td><td class="num">0.0352</td><td class="num">0.0294</td><td class="num">91.3</td><td class="num">88.0</td></tr>
+                                    <tr><td><b>2</b></td><td class="num"><b>0.0032</b></td><td class="num">0.0424</td><td class="num">0.0459</td><td class="num"><b>0.0163</b></td><td class="num"><b>96.0</b></td><td class="num">94.7</td></tr>
+                                    <tr><td>3</td><td class="num">0.0004</td><td class="num">0.0418</td><td class="num">0.0531</td><td class="num">0.0115</td><td class="num">96.0</td><td class="num">96.7</td></tr>
+                                    <tr><td>4</td><td class="num">0.0000</td><td class="num">0.0416</td><td class="num">0.0431</td><td class="num">0.0040</td><td class="num">95.3</td><td class="num">96.7</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -474,7 +474,7 @@
                             <div class="callout-title">Which is preferable?</div>
                             <p><b>For Iris, PCA is preferable.</b></p>
                             <p><b>Compression.</b> Each method preserves the distances it is built for: ISOMAP reproduces
-                                the geodesic distances better (residual variance 0.016 in 2-D vs 0.043 for PCA), and PCA
+                                the geodesic distances better (residual variance 0.016 in 2-D vs 0.042 for PCA), and PCA
                                 reproduces the original Euclidean distances almost exactly (0.003 vs 0.046). The question is
                                 which distances are worth keeping. Iris is close to linear: one direction holds 92.5% of the
                                 variance and two hold 97.8%, so the cloud is nearly flat and there is little evidence of a
@@ -517,7 +517,7 @@
                             (Part 5). <code>plots.py</code> only draws. Run <code>python pca.py</code> from
                             <code>A3/code/</code> to print every number on this page and save the plots to
                             <code>A3/media/</code>. Tested with Python 3.9, NumPy 1.24, scikit-learn 1.0.2 and
-                            Matplotlib 3.9. The Iris data come with scikit-learn, so no data file is needed.</p>
+                            Matplotlib 3.9. The data file <code>iris.data</code> is the unmodified UCI Iris file.</p>
 
                         <details>
                             <summary>pca.py: analysis &amp; driver <span class="hint">Python</span></summary>
@@ -539,7 +539,6 @@ import warnings
 
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
-from sklearn.datasets import load_iris
 from sklearn.decomposition import PCA
 from sklearn.manifold import MDS, Isomap
 from sklearn.model_selection import StratifiedKFold, cross_val_score
@@ -573,10 +572,13 @@ def part1_by_hand():
 
 # ---------- Iris ----------
 def load_data():
-    """The Iris data (150 x 4, in cm) as shipped with scikit-learn: the UCI file with two known errors (samples 35, 38) corrected."""
-    iris = load_iris()
+    """The Iris data (150 x 4, in cm) from the UCI file iris.data (archive.ics.uci.edu/dataset/53/iris), used as is."""
+    classes = ["setosa", "versicolor", "virginica"]
+    rows = [line.strip().split(",") for line in open(os.path.join(HERE, "iris.data")) if line.strip()]
+    X = np.array([[float(v) for v in r[:4]] for r in rows])
+    y = np.array([classes.index(r[4].replace("Iris-", "")) for r in rows])
     names = ["sepal length", "sepal width", "petal length", "petal width"]
-    return iris.data, iris.target, names, list(iris.target_names)
+    return X, y, names, classes
 
 
 # ---------- Part 3: PCA ----------
@@ -945,7 +947,7 @@ def plot_residual(rows, fname):
                     <h2>References &amp; acknowledgements</h2>
                     <ul>
                         <li>SYDE 572 Assignment 3 handout.</li>
-                        <li>Data: UCI Machine Learning Repository, Iris (archive.ics.uci.edu/dataset/53/iris), loaded with <code>sklearn.datasets.load_iris</code>.</li>
+                        <li>Data: UCI Machine Learning Repository, Iris (archive.ics.uci.edu/dataset/53/iris).</li>
                         <li>Analysis with NumPy and scikit-learn (<code>PCA</code>, <code>Isomap</code>, <code>MDS</code>, <code>KNeighborsClassifier</code>); plots with Matplotlib.</li>
                     </ul>
                 </section>
