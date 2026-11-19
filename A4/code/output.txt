@@ -1,0 +1,162 @@
+Data: 11914 reviews, Counter({'pos': 6000, 'neg': 5914})
+    train 9531 (Counter({'pos': 4847, 'neg': 4684})),  test 2383 (Counter({'neg': 1230, 'pos': 1153}))
+    tokens per review: median 99, min 1, max 5965
+
+Model (alpha = 1): |V| = 52392,  tokens per class neg 714916, pos 720896
+    log P(c) = neg -0.7104 (P = 0.4914), pos -0.6762 (P = 0.5086)
+
+Sanity check 1: one-word documents, P(label, doc)
+    ['great']  pos 0.001321   neg 0.000528   -> pos   (counts: pos 2008, neg 824)
+    ['bad']  pos 0.000172   neg 0.000455   -> neg   (counts: pos 261, neg 709)
+    ['excellent']  pos 0.000291   neg 0.000064   -> pos   (counts: pos 441, neg 99)
+    ['waste']  pos 0.000020   neg 0.000207   -> neg   (counts: pos 30, neg 322)
+    ['the']  pos 0.022033   neg 0.020441   -> pos   (counts: pos 33502, neg 31914)
+    ['boring']  pos 0.000016   neg 0.000138   -> neg   (counts: pos 24, neg 215)
+Sanity check 2: ['a', 'top-quality', 'performance']  in vocabulary: [True, False, True]
+    log P(neg, doc) = -27.038,  log P(pos, doc) = -26.366   -> pos
+Small documents:
+    this is not good       -> neg   P(pos|doc) = 0.448
+    not bad at all         -> neg   P(pos|doc) = 0.194
+    i loved it             -> pos   P(pos|doc) = 0.552
+    a waste of money       -> neg   P(pos|doc) = 0.042
+    highly recommend       -> pos   P(pos|doc) = 0.874
+    returned it            -> neg   P(pos|doc) = 0.204
+
+Evaluation on the 20% test set
+    Naive Bayes, alpha = 1                      81.54%   95% CI [79.93, 83.04]   (1943/2383)
+    confusion (true x guess): pos/pos 906, pos/neg 247, neg/pos 193, neg/neg 1037
+    majority-class baseline: 51.62%
+    alpha:     0.01    0.03     0.1     0.3     0.5       1       2       3       5      10      30
+    5-fold CV   76.12   77.02   78.11   78.88   79.26   79.88   80.46   80.53   80.56   80.28   79.60
+    test        77.26   78.26   79.35   80.57   80.91   81.54   81.54   81.49   81.66   81.03   80.53
+    best alpha by CV on the training set: 5
+    Naive Bayes, alpha = 5                      81.66%   95% CI [80.06, 83.16]   (1946/2383)
+    McNemar alpha=1 vs alpha=5: b, c, p = (39, 42, 0.8243132151052077)
+
+Error analysis: most confident mistakes among short reviews (<= 40 tokens)
+  #378  true pos, guessed neg, log-odds 8.09, 37 tokens, topic software
+      i bought zonealarm internet security suite for the included zonealarm pro firewall ( it cost much less that way ) . if i did n't already have norton antivirus , i 'd use the antivirus , too
+      towards neg: zonealarm +2.98, antivirus +1.57, norton +1.39, internet +0.50, security +0.49
+      towards pos: suite +0.64, included +0.61, use +0.35, ( +0.17, ) +0.16
+  #1740  true pos, guessed neg, log-odds 5.50, 35 tokens, topic dvd
+      this movie is a reallllllllllllly scary movie . the only part i did n't like was that pervert mikks in the beginning . be warned of grossness . that is all i need to say
+      towards neg: warned +1.58, pervert +1.39, scary +0.52, did +0.48, n't +0.38
+      towards pos: is +0.25, need +0.24, part +0.15, in +0.11, of +0.09
+  #838  true pos, guessed neg, log-odds 4.73, 40 tokens, topic software
+      excellent service , and the product worked extremely well . the only criticism i would have is the cost of postage . it was ridiculous , the product came in a big parcel , and inside was a dvd .
+      towards neg: postage +2.57, ridiculous +2.04, service +1.12, was +0.62, product +0.58
+      towards pos: excellent +1.48, parcel +0.69, well +0.44, and +0.31, criticism +0.23
+  #1151  true pos, guessed neg, log-odds 3.78, 37 tokens, topic software
+      i needed this for my new macbook laptop that will give me apple and windows on the same machine . the laptop works fine , the pocketbook is thinner . you do what you have to do
+      towards neg: apple +1.26, laptop +0.94, do +0.69, machine +0.68, windows +0.60
+      towards pos: macbook +1.09, works +0.45, and +0.15, you +0.14, is +0.12
+  #1507  true pos, guessed neg, log-odds 3.72, 15 tokens, topic music
+      this was not a waste of brad 's time or mine . good job !
+      towards neg: waste +2.35, brad +1.51, not +0.45, was +0.31, mine +0.19
+      towards pos: job +0.91, good +0.11, 's +0.10, of +0.09, a +0.08
+  #2242  true pos, guessed neg, log-odds 3.13, 40 tokens, topic music
+      another hot release , top 5 in 2005 so far . no one even metions track 7 produced by one and only el-producto and track 8 by belief . hot cd recommend to those who do n't listin to bull
+      towards neg: bull +1.04, 2005 +0.95, belief +0.90, no +0.44, n't +0.38
+      towards pos: recommend +0.60, track +0.41, those +0.34, and +0.31, top +0.24
+  #1373  true pos, guessed neg, log-odds 3.10, 35 tokens, topic camera
+      works great on my s2is , clicked on silver on main page but switched to black on order form , did n't notice this but i like the black anyway . looks good with acc
+      towards neg: s2is +1.39, acc +0.70, did +0.48, n't +0.38, looks +0.38
+      towards pos: great +0.88, silver +0.69, works +0.45, good +0.11, with +0.09
+  #678  true pos, guessed neg, log-odds 3.05, 25 tokens, topic software
+      i was a little diappointed when i found out that i would have to buy more versions to get continued training on this subject .
+      towards neg: diappointed +0.70, training +0.45, buy +0.42, i +0.38, would +0.36
+      towards pos: little +0.24, more +0.17, versions +0.09, a +0.08, continued +0.06
+    error rate by review length:
+         0-  50: 17.77%  (n = 529)
+        50- 100: 19.11%  (n = 628)
+       100- 200: 18.09%  (n = 702)
+       200- 400: 20.00%  (n = 355)
+       400-    : 16.57%  (n = 169)
+    error rate by confidence |log-odds|:
+        0-  2: 39.20%  (n = 426)
+        2-  5: 19.76%  (n = 587)
+        5- 10: 14.52%  (n = 613)
+       10- 20: 11.60%  (n = 474)
+       20-   :  4.59%  (n = 283)
+
+Optional: topic classifier (6 classes)
+    Naive Bayes, topic                          90.52%   95% CI [89.27, 91.63]   (2157/2383)
+      books      331    2   27    4    2   11   recall 87.8%
+      camera       0  371    0    5    1    7   recall 96.6%
+      dvd         14    5  364    4   19    5   recall 88.6%
+      health       6   54    1  360    1   12   recall 82.9%
+      music        3    2   15    4  391    7   recall 92.7%
+      software     2    7    2    2    2  340   recall 95.8%
+    most typical words per topic:
+      books     book, author, books, chapter, novel, reader, pages, read
+      camera    camera, lens, canon, battery, pictures, cameras, flash, zoom
+      dvd       movie, film, films, season, dvd, movies, scenes, acting
+      health    hair, shaver, shave, razor, skin, dryer, shaving, brush
+      music     album, song, songs, cd, albums, tracks, music, band
+      software  software, program, microsoft, vista, adobe, windows, xp, norton
+
+Optional: learning curve (test set fixed, first f of the training part)
+        1%  n =    95   NB  62.53%   LinearSVC  63.74%
+        2%  n =   191   NB  66.51%   LinearSVC  67.86%
+        5%  n =   477   NB  71.84%   LinearSVC  74.44%
+       10%  n =   953   NB  75.49%   LinearSVC  79.40%
+       20%  n =  1906   NB  78.14%   LinearSVC  79.52%
+       30%  n =  2859   NB  79.14%   LinearSVC  81.37%
+       40%  n =  3812   NB  79.40%   LinearSVC  82.67%
+       50%  n =  4766   NB  79.65%   LinearSVC  82.58%
+       60%  n =  5719   NB  80.74%   LinearSVC  83.34%
+       70%  n =  6672   NB  81.03%   LinearSVC  84.35%
+       80%  n =  7625   NB  81.20%   LinearSVC  84.60%
+       90%  n =  8578   NB  81.79%   LinearSVC  84.64%
+      100%  n =  9531   NB  81.54%   LinearSVC  85.23%
+
+Optional: most informative features (log P(w|pos) - log P(w|neg))
+  alpha = 1.0
+         pos: pluto, lieutenant, maizon, powell, flaxseed, picard, spider-man, jakes, onenote, photographers, snack, snapfire, buffy, encarta, valjean
+         neg: seagal, nis, lisbon, blah, gnr, e18, rip-off, the\x1a, dennett, bras, trite, uninstalled, cheaply, ludemann, and\x1a
+  alpha = 10.0
+         pos: pluto, illustrator, keaton, commander, favorites, season, excellent, amazing, buffy, allows, lenses, organic, lieutenant, cs, batman
+         neg: waste, horrible, warranty, refund, boring, worst, repair, disappointing, garbage, seagal, roxio, symantec, disappointment, lame, ridiculous
+  alpha = 100.0
+         pos: excellent, easy, highly, great, amazing, season, wonderful, best, love, perfect, lens, favorite, lenses, job, fun
+         neg: waste, worst, boring, support, horrible, poor, bad, nothing, money, customer, terrible, disappointed, unfortunately, ?, worse
+
+Optional: scikit-learn TF-IDF + LinearSVC
+    LinearSVC (TF-IDF)                          85.23%   95% CI [83.75, 86.60]   (2031/2383)
+    McNemar NB vs SVM: b (NB right only), c (SVM right only), p = (119, 207, 1.256071832889255e-06)
+    sklearn MultinomialNB (check)               81.54%   95% CI [79.93, 83.04]   (1943/2383)
+    agreement with my NB: 99.92% of test documents
+
+Optional: improved features (alpha = 1)
+    unigrams (baseline)                         81.54%   95% CI [79.93, 83.04]   (1943/2383)
+        vs baseline: only baseline right 0, only this right 0, McNemar p = 1
+    negation marking                            81.37%   95% CI [79.75, 82.88]   (1939/2383)
+        vs baseline: only baseline right 116, only this right 112, McNemar p = 0.84
+    unigrams + bigrams                          85.69%   95% CI [84.23, 87.04]   (2042/2383)
+        vs baseline: only baseline right 43, only this right 142, McNemar p = 1.5e-13
+    negation + bigrams                          85.94%   95% CI [84.49, 87.28]   (2048/2383)
+        vs baseline: only baseline right 68, only this right 173, McNemar p = 9.9e-12
+        vs LinearSVC: (NB right only, SVM right only, p) = (164, 147, 0.3642837578605541)
+    example: it is not NOT_very NOT_good , but cheap
+
+Optional: domain sensitivity (rows = trained on, columns = tested on)
+                  books   camera      dvd   health    music software
+    books          79.8     66.2     70.2     64.2     73.0     66.1
+    camera         70.5     86.8     70.2     71.5     67.2     74.2
+    dvd            74.5     67.0     75.2     67.2     77.8     64.8
+    health         69.2     76.5     70.0     81.2     71.0     76.2
+    music          75.0     68.8     73.2     64.0     83.2     66.6
+    software       58.2     70.5     60.2     74.2     64.0     83.6
+    camera model: in-domain 86.8% (83.1, 89.7), on books 70.5% (65.9, 74.8)
+    books model: in-domain 79.8% (75.5, 83.4), on camera 66.2% (61.5, 70.7)
+    McNemar on books test set, in-domain vs out-of-domain model: (82, 45, 0.001307385123499996)
+    McNemar on camera test set, in-domain vs out-of-domain model: (111, 29, 1.6638844634724402e-12)
+    mean in-domain 81.6%, mean out-of-domain 69.4%
+
+Optional: Gaussian Naive Bayes on Iris
+    setosa     mean [5.03  3.459 1.446 0.257]  sd [0.365 0.402 0.154 0.115]
+    versicolor mean [5.977 2.803 4.306 1.34 ]  sd [0.544 0.331 0.475 0.206]
+    virginica  mean [6.653 2.984 5.584 2.061]  sd [0.607 0.311 0.566 0.266]
+    my Gaussian NB, 40 random test flowers      95.00%   95% CI [83.50, 98.62]   (38/40)
+    sklearn GaussianNB agrees on 100% of test flowers
+    10-fold CV: 94.67%  95% CI [89.83, 97.27]  (142/150)
